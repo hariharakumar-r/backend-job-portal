@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+# Never commit this file to version control!
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
