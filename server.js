@@ -23,12 +23,17 @@ Cloudinary();
 
 app.get("/", (req, res) => res.send("api is working"));
 
-// Error handling middleware
+// Add this error handler before your routes
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+  res.status(500).json({ 
+    success: false,
+    message: "Internal server error",
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
+// Move error handling middleware after routes
 app.use("/auth", authRoutes);
 // app.use("/users", userRoutes);
 // app.use("/interviews", interviewRoutes);
@@ -36,6 +41,11 @@ app.use("/zoom", zoomRoutes);
 app.use("/user", userRoutes);
 app.use("/company", companyRoutes);
 app.use("/job", jobRoutes);
+
+// Add this at the end
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => 
