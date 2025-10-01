@@ -1,7 +1,7 @@
 import express from "express";
+import cors from "cors";
 import "dotenv/config";
 import bodyParser from "body-parser";
-import cors from "cors";
 import connectDB from "./src/db/connectDB.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import companyRoutes from "./src/routes/companyRoutes.js";
@@ -12,10 +12,22 @@ import zoomRoutes from './src/routes/zoom.js';
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(cors());
-app.use(cors());
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'https://job-portal-frontend-seven-theta.vercel.app',
+    'http://localhost:3000'  // For local development
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 connectDB();
