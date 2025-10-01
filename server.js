@@ -13,19 +13,47 @@ import zoomRoutes from './src/routes/zoom.js';
 const app = express();
 
 // CORS Configuration
+const allowedOrigins = [
+  'https://job-portal-frontend-seven-theta.vercel.app',
+  'https://job-portal-backend-kfkrprfwo-hariharakumar-rs-projects.vercel.app',
+  'http://localhost:3000'  // For local development
+];
+
 const corsOptions = {
-  origin: [
-    'https://job-portal-frontend-seven-theta.vercel.app',
-    'http://localhost:3000'  // For local development
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin'
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Add headers middleware as backup
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
