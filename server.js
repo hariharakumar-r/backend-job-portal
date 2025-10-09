@@ -23,17 +23,7 @@ const allowedOrigins = [
 
 // Make CORS origin check explicit
 const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests with no origin (like curl, Postman, mobile apps)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      // echo the requesting origin. This ensures Access-Control-Allow-Origin
-      // is not the wildcard '*' which is required when using credentials.
-      return callback(null, origin);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+  
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   // include the custom `token` header your frontend sends, plus common headers
   allowedHeaders: [
