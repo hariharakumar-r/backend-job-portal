@@ -33,6 +33,8 @@ const corsOptions = {
     "token",
     "x-csrf-token",
     "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Methods",
     // Note: don't include response-only headers like Access-Control-Allow-Origin here
   ],
   credentials: true,
