@@ -19,17 +19,19 @@ const allowedOrigins = [
   'http://localhost:3000'  // For local development
 ];
 
-const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS.split(','),
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'x-csrf-token'],
-  exposedHeaders: ['Authorization'],
-  optionsSuccessStatus: 200
-};
+
 
 // Apply CORS before any routes
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: [
+      "*"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Add this line
+  })
+);
 
 app.use(express.json());
 app.use(bodyParser.json());
