@@ -24,12 +24,12 @@ const allowedOrigins = [
 // Apply CORS before any routes
 app.use(
   cors({
-    origin: ["https://job-portal-frontend-seven-theta.vercel.app/"],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", 
       "x-csrf-token", "Access-Control-Allow-Origin"
     ],
-    credentials: true, // Add this line
+    credentials: true,
   })
 );
 
@@ -42,11 +42,18 @@ Cloudinary();
 
 app.get("/", (req, res) => res.send("api is working"));
 
-// Add this after your routes but before app.listen()
+// Register routes
+app.use("/auth", authRoutes);
+// app.use("/users", userRoutes);
+// app.use("/interviews", interviewRoutes);
+app.use("/zoom", zoomRoutes);
+app.use("/user", userRoutes);
+app.use("/company", companyRoutes);
+app.use("/job", jobRoutes);
 
 // CORS error handler
 app.use((err, req, res, next) => {
-  if (err.message === 'Not allowed by CORS') {
+  if (err && err.message === 'Not allowed by CORS') {
     res.status(403).json({
       success: false,
       message: 'CORS origin not allowed',
@@ -56,24 +63,15 @@ app.use((err, req, res, next) => {
   }
 });
 
-// General error handler
+// General error handler (must be after routes)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
+  console.error(err && err.stack ? err.stack : err);
+  res.status(err && err.status ? err.status : 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    message: err && err.message ? err.message : 'Internal Server Error',
+    error: process.env.NODE_ENV === 'development' ? (err && err.stack ? err.stack : undefined) : undefined,
   });
 });
-
-// Move error handling middleware after routes
-app.use("/auth", authRoutes);
-// app.use("/users", userRoutes);
-// app.use("/interviews", interviewRoutes);
-app.use("/zoom", zoomRoutes);
-app.use("/user", userRoutes);
-app.use("/company", companyRoutes);
-app.use("/job", jobRoutes);
 
 // Add this at the end
 process.on('unhandledRejection', (reason, promise) => {

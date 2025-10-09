@@ -2,17 +2,20 @@ import Job from "../models/Job.js";
 
 const getAllJobs = async (req, res) => {
   try {
-    const query = { active: true };
-    
+    // Model uses `visible` as the flag for job visibility (not `active`).
+    const query = { visible: true };
+
     const jobs = await Job.find(query)
-      .populate("companyId", "name email image -_id")
+      .populate("companyId", "name email image")
       .select("-__v")
       .lean();
 
-    return res.status(200).json(jobs);
+  // Return the array directly to preserve previous API contract used by frontend
+  return res.status(200).json(jobs);
   } catch (error) {
-    console.error("Error fetching jobs:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    // Log full stack to help debugging on deploy
+    console.error("Error fetching jobs:", error && error.stack ? error.stack : error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
