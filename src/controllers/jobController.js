@@ -15,7 +15,12 @@ const getAllJobs = async (req, res) => {
   } catch (error) {
     // Log full stack to help debugging on deploy
     console.error("Error fetching jobs:", error && error.stack ? error.stack : error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      // Only include error details in development to avoid leaking internals in production
+      error: process.env.NODE_ENV === 'development' ? (error && error.stack ? error.stack : String(error)) : undefined,
+    });
   }
 };
 
