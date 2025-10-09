@@ -24,11 +24,11 @@ const allowedOrigins = [
 // Apply CORS before any routes
 app.use(
   cors({
-    origin: [
-      "*"
-    ],
+    origin: ["https://job-portal-frontend-seven-theta.vercel.app/"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", 
+      "x-csrf-token", "Access-Control-Allow-Origin"
+    ],
     credentials: true, // Add this line
   })
 );
