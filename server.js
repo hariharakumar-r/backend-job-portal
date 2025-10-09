@@ -16,22 +16,38 @@ const app = express();
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
   'https://job-portal-backend-kfkrprfwo-hariharakumar-rs-projects.vercel.app',
-  'http://localhost:3000'  // For local development
+  'http://localhost:3000',  // For local development
+  'http://localhost:5173'   // Vite dev server
 ];
 
-
+// Make CORS origin check explicit
+const corsOptions = {
+  origin: function (origin, callback) {
+    // allow requests with no origin (like curl, Postman, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  // include the custom `token` header your frontend sends, plus common headers
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "authorization",
+    "token",
+    "x-csrf-token",
+    "Access-Control-Allow-Origin"
+  ],
+  credentials: true,
+};
 
 // Apply CORS before any routes
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", 
-      "x-csrf-token", "Access-Control-Allow-Origin"
-    ],
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+// Ensure preflight OPTIONS requests are handled for all routes
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(bodyParser.json());
