@@ -16,8 +16,8 @@ const app = express();
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
   'https://job-portal-backend-kfkrprfwo-hariharakumar-rs-projects.vercel.app',
-  'http://localhost:3000',  // For local development
-  'http://localhost:5173'   // Vite dev server
+  'http://localhost:3000',  // For local development,  // Vite dev server
+  'http://localhost:5174'   // Vite dev server (alternate port)
 ];
 
 // Make CORS origin check explicit
@@ -26,9 +26,11 @@ const corsOptions = {
     // allow requests with no origin (like curl, Postman, mobile apps)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+      // echo the requesting origin. This ensures Access-Control-Allow-Origin
+      // is not the wildcard '*' which is required when using credentials.
+      return callback(null, origin);
     } else {
-      return callback(new Error('Not allowed by CORS'));
+      return callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -39,7 +41,8 @@ const corsOptions = {
     "authorization",
     "token",
     "x-csrf-token",
-    "Access-Control-Allow-Origin"
+    "Access-Control-Allow-Origin",
+    // Note: don't include response-only headers like Access-Control-Allow-Origin here
   ],
   credentials: true,
 };
