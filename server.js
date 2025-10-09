@@ -17,7 +17,8 @@ const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
   'https://job-portal-backend-kfkrprfwo-hariharakumar-rs-projects.vercel.app',
   'http://localhost:3000',  // For local development,  // Vite dev server
-  'http://localhost:5174'   // Vite dev server (alternate port)
+  'http://localhost:5174',
+  'http://localhost:5173'   // Vite dev server (alternate port)
 ];
 
 // Make CORS origin check explicit
