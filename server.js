@@ -14,35 +14,29 @@ const app = express();
 // CORS Configuration
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
-  'http://localhost:5173'   
+  'http://localhost:5173',
+  'https://job-portal-backend-ochre.vercel.app'  // Add your backend URL
 ];
 
-// Make CORS origin check explicit
 const corsOptions = {
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      // Echo the requesting origin - required for credentials mode
-      return callback(null, origin);
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
     } else {
-      return callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "token",
-    "x-csrf-token"
-  ],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'x-csrf-token'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
 
-// Apply CORS before any routes
+// Apply CORS before other middleware
 app.use(cors(corsOptions));
-// Ensure preflight OPTIONS requests are handled for all routes
-// app.options('*', cors(corsOptions));
+
+// Enable pre-flight requests for all routes
+app.options('*', cors(corsOptions));
 
 connectDB();
 Cloudinary();
@@ -58,6 +52,18 @@ app.use("/user", userRoutes);
 app.use("/company", companyRoutes);
 app.use("/job", jobRoutes);
 
+// Add health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok',
+    timestamp: new Date(),
+    services: {
+      database: 'connected',
+      server: 'running'
+    }
+  });
+});
+
 // CORS error handler
 app.use((err, req, res, next) => {
   if (err && err.message === 'Not allowed by CORS') {
@@ -72,11 +78,17 @@ app.use((err, req, res, next) => {
 
 // General error handler (must be after routes)
 app.use((err, req, res, next) => {
-  console.error(err && err.stack ? err.stack : err);
-  res.status(err && err.status ? err.status : 500).json({
+  console.error('Error details:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method
+  });
+
+  res.status(err.status || 500).json({
     success: false,
-    message: err && err.message ? err.message : 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? (err && err.stack ? err.stack : undefined) : undefined,
+    message: err.message || 'Internal Server Error',
+    error: process.env.NODE_ENV === 'development' ? err.stack : undefined
   });
 });
 
