@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import bodyParser from "body-parser";
 import connectDB from "./src/db/connectDB.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import companyRoutes from "./src/routes/companyRoutes.js";
@@ -15,9 +14,7 @@ const app = express();
 // CORS Configuration
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
-  'http://localhost:3000',  // For local development
-  'http://localhost:5174',  // Vite dev server
-  'http://localhost:5173'   // Vite dev server
+  'http://localhost:5173'   
 ];
 
 // Make CORS origin check explicit
@@ -45,11 +42,7 @@ const corsOptions = {
 // Apply CORS before any routes
 app.use(cors(corsOptions));
 // Ensure preflight OPTIONS requests are handled for all routes
-app.options('*', cors(corsOptions));
-
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+// app.options('*', cors(corsOptions));
 
 connectDB();
 Cloudinary();
