@@ -15,7 +15,6 @@ const app = express();
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
   'http://localhost:5173',
-  'https://job-portal-backend-ochre.vercel.app'  // Add your backend URL
 ];
 
 const corsOptions = {
