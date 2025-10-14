@@ -13,4 +13,4 @@ router.get('/all-jobs', async (req, res, next) => {
   }
 });
 
-export default router;
+export default getAllJobs;
