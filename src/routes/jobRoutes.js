@@ -1,5 +1,5 @@
 import express from "express";
-import getAllJobs from "../controllers/jobController.js";
+import { getAllJobs } from "../controllers/jobController.js";
 
 const router = express.Router();
 
@@ -13,4 +13,4 @@ router.get('/all-jobs', async (req, res, next) => {
   }
 });
 
-export default getAllJobs;
+export default router;

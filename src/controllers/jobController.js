@@ -1,7 +1,10 @@
 import Job from "../models/Job.js";
 
-exports.getAllJobs = async (req, res) => {
+export const getAllJobs = async (req, res) => {
   try {
+    if (!Job || typeof Job.find !== 'function') {
+      throw new Error('Job model is not defined or improperly imported');
+    }
     const jobs = await Job.find()
       .populate('company', 'companyName')
       .sort({ createdAt: -1 });
@@ -16,3 +19,5 @@ exports.getAllJobs = async (req, res) => {
     });
   }
 };
+
+export default getAllJobs;
