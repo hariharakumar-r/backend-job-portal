@@ -14,7 +14,7 @@ const app = express();
 // CORS Configuration
 const allowedOrigins = [
   'https://job-portal-frontend-seven-theta.vercel.app',
-  'http://localhost:5173',
+  'http://localhost:5173'
 ];
 
 const corsOptions = {
