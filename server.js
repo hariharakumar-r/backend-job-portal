@@ -35,7 +35,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Enable pre-flight requests for all routes
-app.options('*', cors(corsOptions));  // Changed from '/*' to '*'
+app.all('/*splat', cors(corsOptions));  // Changed from '/*' to '*'
 
 connectDB();
 Cloudinary();
