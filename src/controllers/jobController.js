@@ -2,12 +2,9 @@ import Job from "../models/Job.js";
 
 export const getAllJobs = async (req, res) => {
   try {
-    if (!Job || typeof Job.find !== 'function') {
-      throw new Error('Job model is not defined or improperly imported');
-    }
-    const jobs = await Job.find()
-      .populate('company', 'companyName')
-      .sort({ createdAt: -1 });
+    const jobs = await Job.find({ visible: true })
+      .populate('companyId', 'name email image')
+      .sort({ date: -1 });
     
     res.status(200).json(jobs);
   } catch (error) {

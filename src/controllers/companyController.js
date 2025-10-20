@@ -43,15 +43,13 @@ export const registerCompany = async (req, res) => {
         .json({ success: false, message: "Company already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // amazonq-ignore-next-line
     const imageUpload = await cloudinary.uploader.upload(imageFile.path);
 
     const company = new Company({
       name,
       email,
-      password: hashedPassword,
+      password,
       image: imageUpload.secure_url,
     });
 
