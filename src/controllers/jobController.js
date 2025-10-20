@@ -2,7 +2,7 @@ import Job from "../models/Job.js";
 
 export const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ visible: true })
+    const jobs = await job.find({ visible: true })
       .populate('companyId', 'name email image')
       .sort({ date: -1 });
     
