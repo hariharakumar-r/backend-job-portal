@@ -40,7 +40,7 @@ app.all('/*splat', cors(corsOptions));  // Changed from '/*' to '*'
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Register routes
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 // Connect to Database and Cloudinary
 connectDB();
 Cloudinary();
