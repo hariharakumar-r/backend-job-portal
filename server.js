@@ -37,13 +37,17 @@ app.use(cors(corsOptions));
 // Enable pre-flight requests for all routes
 app.all('/*splat', cors(corsOptions));  // Changed from '/*' to '*'
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// Register routes
+app.use("/api/auth", authRoutes);
+// Connect to Database and Cloudinary
 connectDB();
 Cloudinary();
 
 app.get("/", (req, res) => res.send("api is working"));
 
-// Register routes
-app.use("/auth", authRoutes);
+
 // app.use("/users", userRoutes);
 // app.use("/interviews", interviewRoutes);
 app.use("/zoom", zoomRoutes);

@@ -82,14 +82,15 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    if (!email) {
-      return sendErrorResponse(res, 400, "Email is required");
+    // Add validation
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Request body is empty' });
     }
 
-    if (!password) {
-      return sendErrorResponse(res, 400, "Password is required");
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
     // Validate input types to prevent NoSQL injection and runtime errors
