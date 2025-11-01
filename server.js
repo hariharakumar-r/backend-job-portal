@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import connectDB from "./src/db/connectDB.js";
+import { connectDB } from "./src/db/connectDB.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import companyRoutes from "./src/routes/companyRoutes.js";
 import jobRoutes from "./src/routes/jobRoutes.js";
